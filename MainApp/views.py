@@ -10,20 +10,30 @@ from MainApp.models import Candle
 def handle_upload_file(file,timeframe):
     candles=[]
     file_path  = os.path.join(settings.MEDIA_ROOT,file.name)
+    os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+
     with open(file_path, 'wb+') as f:
         for chunk in file.chunks():
             f.write(chunk)
     
     with open(file_path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
+        headers = reader.fieldnames
+        print("CSV Headers:", headers)
+
+        first_row = next(reader)
+        print("First Row:", first_row)
         for row in reader:
-            timestamp = datetime.strptime(row['Timestamp'], '%Y-%m-%d %H:%M:%S')
+            print(row)  # Check the contents of each row
+            timestamp = f"{row['DATE']} {row['TIME']}"
+
+            # timestamp = datetime.strptime(timestamp_str, '%Y%m%d %H:%M')
             candle = Candle(
                 timestamp=timestamp, 
-                open=float(row['Open']), 
-                high=float(row['High']), 
-                low=float(row['Low']), 
-                close=float(row['Close']),
+                open=float(row['OPEN']),
+                high=float(row['HIGH']),
+                low=float(row['LOW']),
+                close=float(row['CLOSE'])
             ) 
             # candles.append(candle)
             candle.save()
@@ -35,11 +45,11 @@ def handle_upload_file(file,timeframe):
                 "close": candle.close,
                 "date": candle.date
             })
-            converted_candles = convert_to_timeframe(candles,timeframe)
+            converted_candles = convert_to_timeframe(candles,int(timeframe))
 
             json_file_p = os.path.join(settings.MEDIA_ROOT,'converted_candles.json')
             with open(json_file_p, 'w') as json_file:
-                json.dump(converted_candles, json_file) #descerilaiztion 
+                json.dump(converted_candles, json_file,default=str) #descerilaiztion 
                 
             return json_file_p
 
