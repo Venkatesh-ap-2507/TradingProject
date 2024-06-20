@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class candle(models.Model):
+class Candle(models.Model):
     open = models.FloatField()
     high = models.FloatField()
     low = models.FloatField()
