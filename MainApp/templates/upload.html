@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPLOAD CSV FILE </title>
+</head>
+<body>
+    <h2>Upload CSV File </h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="file">Select  CSV File :</label>
+        <input type="file" name="file" id="file" required>
+        <br>
+        <br>
+        <label for="timeframe">Enter the TimeFrame in the minutes :</label>
+        <input type="number" name="timeframe" id="timeframe" required>
+        <br>
+        <br>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
